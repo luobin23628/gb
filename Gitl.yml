@@ -1,0 +1,16 @@
+projects:
+  -
+    name: tianxiao-base-iphone-sdk
+    git: http://git.tianxiao100.com/tianxiao-ios/tianxiao/tianxiao-base-iphone-sdk
+    branch: master
+  -
+    name: tianxiao-iphone
+    git: http://git.tianxiao100.com/tianxiao-ios/tianxiao/tianxiao-iphone.git
+    branch: master
+
+gitlab:
+  # GitLab api url. example http://git.tianxiao100.com/api/v4
+  endpoint: http://git.tianxiao100.com/api/v4
+  # set a your private token
+  # user's private token or OAuth2 access token
+  private_token: -A8bhPrhudHcnSkVGCZr

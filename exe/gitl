@@ -1,8 +1,13 @@
 #!/usr/bin/env ruby
 
+require 'gitl'
+require 'command'
 require 'gitlab'
 require 'optparse'
 
+Gitl::Command::run(ARGV)
+
+#begin
 options = {}
 OptionParser.new do |opts|
   opts.banner = "usage: git clone [<options>] [--] <repo> [<dir>]"
@@ -207,10 +212,7 @@ options[:projects].each do |name|
   end
 end
 
-
-
-
-
+#end
 
 
 
