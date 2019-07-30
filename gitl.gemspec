@@ -31,6 +31,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency "gitlab", "~> 4.12.0"
   spec.add_dependency "claide", "~> 1.0.2"
   spec.add_dependency "cocoapods-downloader", "~>1.2.2 "
+  spec.add_dependency "colored2", "~>3.1.2 "
 
   spec.add_development_dependency "bundler", "~> 2.0"
   spec.add_development_dependency "rake", "~> 10.0"

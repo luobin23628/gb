@@ -1,6 +1,7 @@
 
 require 'claide'
 require 'rubygems'
+require 'colored2'
 
 
 module Gitl
@@ -14,7 +15,6 @@ module Gitl
     self.command = 'gitl'
     self.version = VERSION
     self.description = 'Gitl, the tianxiao gitlab manager.'
-    self.plugin_prefixes = %w(claide cocoapods)
 
     def self.run(argv)
       help! 'You cannot run gitl as root.' if Process.uid == 0 && !Gem.win_platform?
@@ -26,7 +26,7 @@ module Gitl
       case exception
       when Interrupt
         puts '[!] Cancelled'.red
-        Config.instance.verbose? ? raise : exit(1)
+        self.verbose? ? raise : exit(1)
       when SystemExit
         raise
       else
