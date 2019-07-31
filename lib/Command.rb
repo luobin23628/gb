@@ -2,10 +2,32 @@
 require 'claide'
 require 'rubygems'
 require 'colored2'
+require 'git'
+
+
+module Patches
+  module Git
+    module Lib
+      def initialize(*args)
+        super
+        @logger = Logger.new(STDOUT)
+      end
+
+      def run_command(git_cmd, &block)
+        git_cmd = git_cmd.gsub(/2>&1$/, '')
+        return IO.popen(git_cmd, &block) if block_given?
+
+        `#{git_cmd}`.chomp
+      end
+    end
+  end
+end
+
+
+Git::Lib.prepend(Patches::Git::Lib)
 
 
 module Gitl
-  class Error < StandardError; end
 
   class Command < CLAide::Command
 
@@ -26,7 +48,7 @@ module Gitl
       case exception
       when Interrupt
         puts '[!] Cancelled'.red
-        self.verbose? ? raise : exit(1)
+        exit(1)
       when SystemExit
         raise
       else

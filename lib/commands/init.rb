@@ -1,55 +1,49 @@
 require 'command'
-require 'cocoapods-downloader'
 require 'yaml'
+require 'config/yml_config'
+require 'colored2'
 
 module Gitl
 
   class Init < Command
 
-    self.summary = '初始化gitlab配置，下载代码'
+    self.summary = '根据yml配置，更新代码'
 
     self.description = <<-DESC
-      初始化gitlab配置，下载代码.
+      根据yml配置，更新代码.
     DESC
 
     self.arguments = [
-        CLAide::Argument.new('manifest', false, false),
+        CLAide::Argument.new('yml', false, false),
     ]
 
     def initialize(argv)
-      @manifest = argv.shift_argument
-      if @manifest.nil?
-        @manifest = 'Gitl.yml'
+      @yml = argv.shift_argument
+      if @yml.nil?
+        @yml = 'Gitl.yml'
       end
       super
     end
 
     def validate!
       super
-      if @manifest.nil?
+      if @yml.nil?
         help! 'manifest is required.'
       end
     end
 
     def run
+      config = YmlConfig.load_file(@yml)
+      config.projects.each do |project|
+        project_path = File.expand_path(project.name, './')
+        if File.exist?(project_path)
+          puts project.name + ' exists, skip.'
+        else
+          g = Git.clone(project.git, project.name, :path => './', :depth => 1)
+        end
 
-      configs = YAML.load_file(@manifest)
-      projects = configs['projects']
-      projects.each do |project|
-        target_path = project['name']
-        git_url = project['git']
-        options = { :git => git_url }
-        options = Pod::Downloader.preprocess_options(options)
-        downloader = Pod::Downloader.for_target(target_path, options)
-        # downloader.cache_root = '~/Library/Caches/APPNAME'
-        # downloader.max_cache_size = 500
-        downloader.download
-        puts downloader.checkout_options
-        downloader.checkout_options #=> { :git => 'example.com', :commit => 'd7f410490dabf7a6bde665ba22da102c3acf1bd9' }
       end
-
     end
-
   end
 
 end
