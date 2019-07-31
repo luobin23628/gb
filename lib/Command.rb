@@ -32,11 +32,37 @@ module Gitl
   class Command < CLAide::Command
 
     require 'commands/init'
+    require 'commands/update'
 
     self.abstract_command = true
     self.command = 'gitl'
     self.version = VERSION
     self.description = 'Gitl, the tianxiao gitlab manager.'
+
+    attr_reader :config
+
+    def self.options
+      [
+          %w(--config=[Gitl.yml] gitl配置, 默认为Gitl.yml)
+          # ['--config=[Gitl.yml]', 'gitl配置, 默认为Gitl.yml'],
+      ].concat(super)
+    end
+
+    def initialize(argv)
+      yml = argv.option('config')
+      if yml.nil?
+        yml = 'Gitl.yml'
+      end
+      @config = YmlConfig.load_file(yml)
+      super
+    end
+
+    def validate!
+      super
+      if @config.nil?
+        help! 'config is required.'
+      end
+    end
 
     def self.run(argv)
       help! 'You cannot run gitl as root.' if Process.uid == 0 && !Gem.win_platform?
