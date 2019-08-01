@@ -7,10 +7,15 @@ require 'git'
 
 module Patches
   module Git
+    module Base
+      def track(remote, branch)
+        self.lib.track(remote, branch)
+      end
+    end
     module Lib
       def initialize(*args)
         super
-        @logger = Logger.new(STDOUT)
+        # @logger = Logger.new(STDOUT)
       end
 
       def run_command(git_cmd, &block)
@@ -19,20 +24,33 @@ module Patches
 
         `#{git_cmd}`.chomp
       end
+
+      def track(remote, branch)
+        arr_opts = []
+        arr_opts << '-u'
+        arr_opts << "#{remote}/#{branch}"
+        command('branch', arr_opts)
+      end
+
     end
   end
 end
 
 
 Git::Lib.prepend(Patches::Git::Lib)
+Git::Base.prepend(Patches::Git::Base)
 
 
 module Gitl
+  class Error < StandardError; end
 
   class Command < CLAide::Command
 
     require 'commands/init'
     require 'commands/update'
+    require 'commands/start'
+    require 'commands/review'
+    require 'commands/tag'
 
     self.abstract_command = true
     self.command = 'gitl'

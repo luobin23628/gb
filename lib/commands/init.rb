@@ -19,7 +19,7 @@ module Gitl
         if File.exist?(project_path)
           puts project.name + ' exists, skip.'
         else
-          g = Git.clone(project.git, project.name, :path => './', :depth => 1)
+          g = Git.clone(project.git, project.name, :path => './')
         end
 
       end
