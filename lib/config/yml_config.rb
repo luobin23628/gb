@@ -5,7 +5,8 @@ module Gitl
     attr_reader :gitlab
 
     def initialize(node)
-      @gitlab = GitlabConfig.new(node)
+      gitlab = node['gitlab']
+      @gitlab = GitlabConfig.new(gitlab)
 
       @projects = []
       projects = node['projects']
