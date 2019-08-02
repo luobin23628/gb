@@ -11,11 +11,19 @@ module Patches
       def track(remote, branch)
         self.lib.track(remote, branch)
       end
+
+      def setLogger(logger)
+        self.lib.setLogger(logger)
+      end
     end
     module Lib
       def initialize(*args)
         super
         # @logger = Logger.new(STDOUT)
+      end
+
+      def setLogger(logger)
+        @logger = logger
       end
 
       def run_command(git_cmd, &block)

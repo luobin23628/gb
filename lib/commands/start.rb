@@ -31,48 +31,36 @@ module Gitl
     end
 
     def run
-      # api: https://www.rubydoc.info/gems/gitlab/toplevel
-      # document: https://narkoz.github.io/gitlab/cli
-
-      Gitlab.configure do |config|
-        # set an API endpoint
-        # API endpoint URL, default: ENV['GITLAB_API_ENDPOINT']
-        config.endpoint = self.config.gitlab.endpoint
-
-        # set a user private token
-        # user's private token or OAuth2 access token, default: ENV['GITLAB_API_PRIVATE_TOKEN']
-        config.private_token = self.config.gitlab.private_token
-
-        # user agent
-        config.user_agent = "gitl ruby gem[#{VERSION}"
-      end
+      remote = 'origin'
 
       self.config.projects.each do |project|
         project_path = File.expand_path(project.name, './')
         if File.exist?(project_path)
-          remote = 'origin'
           puts "create branch '#{@working_branch}' for project '#{project.name}'"
           g = Git.open(project_path)
         else
           g = Git.clone(project.git, project.name, :path => './')
+        end
 
+        if self.verbose?
+          g.setLogger(Logger.new(STDOUT))
         end
 
         check_uncommit(g, project.name)
 
         # 更新本地代码
-        g.fetch(remote, :p => true, :t => true)
+        g.pull(remote, g.current_branch)
 
         if !g.is_remote_branch?(@remote_branch)
-          raise Error.new("remote branch '#{@remote_branch}' does not exist.")
+          raise Error.new("remote branch '#{@remote_branch}' does not exist for project '#{project.name}'.")
         end
 
         if g.is_remote_branch?(@working_branch)
-          raise Error.new("branch '#{@working_branch}' exist in remote '#{remote}'.")
+          raise Error.new("branch '#{@working_branch}' exist in remote '#{remote}' for project '#{project.name}'.")
         end
 
         if g.is_local_branch?(@working_branch)
-          raise Error.new("branch '#{@working_branch}' exist in local.")
+          raise Error.new("branch '#{@working_branch}' exist in local for project '#{project.name}'.")
         end
 
         # g.remote(remote).branch(@remote_branch).checkout()
