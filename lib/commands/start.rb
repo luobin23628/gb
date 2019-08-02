@@ -49,7 +49,7 @@ module Gitl
         check_uncommit(g, project.name)
 
         # 更新本地代码
-        g.pull(remote, g.current_branch)
+        # g.pull(remote, g.current_branch)
 
         if !g.is_remote_branch?(@remote_branch)
           raise Error.new("remote branch '#{@remote_branch}' does not exist for project '#{project.name}'.")
