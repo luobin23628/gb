@@ -1,11 +1,8 @@
-require 'command'
-require 'yaml'
-require 'config/gitl_config'
-require 'colored2'
+require 'sub_command'
 
 module Gitl
 
-  class Init < Command
+  class Init < SubCommand
 
     self.summary = '根据yml配置，更新代码'
 
@@ -17,7 +14,6 @@ module Gitl
       threads = []
       self.config.projects.each do |project|
         t = Thread.new do
-          puts project.name
           project_path = File.expand_path(project.name, './')
           if File.exist?(project_path)
             puts project.name + ' exists, skip.'

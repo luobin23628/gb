@@ -1,7 +1,7 @@
-require 'command'
+require 'sub_command'
 
 module Gitl
-  class Start < Command
+  class Start < SubCommand
 
     self.summary = '创建对应工作分支，并同步到gitlab.'
 

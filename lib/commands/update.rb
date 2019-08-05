@@ -1,11 +1,9 @@
-require 'command'
-require 'yaml'
-require 'config/gitl_config'
-require 'colored2'
+require 'sub_command'
+
 
 module Gitl
 
-  class Update < Command
+  class Update < SubCommand
 
     self.summary = '根据yml配置，更新代码'
 
@@ -16,14 +14,14 @@ module Gitl
     def run
       self.config.projects.each do |project|
         project_path = File.expand_path(project.name, './')
+
         if File.exist?(project_path)
           puts project.name + ' exists, skip.'
           g = Git.open(project_path)
-          g.fetch()
-          g.pull()
+          g.pull("origin", g.current_branch)
 
         else
-          g = Git.clone(project.git, project.name, :path => './', :depth => 1)
+          raise Error.new("please run gitl init.")
         end
 
       end

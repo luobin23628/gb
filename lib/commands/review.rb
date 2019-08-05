@@ -1,7 +1,7 @@
-require 'command'
+require 'sub_command'
 
 module Gitl
-  class Review < Command
+  class Review < SubCommand
 
     self.summary = '创建对应工作分支，并同步到gitlab.'
 
