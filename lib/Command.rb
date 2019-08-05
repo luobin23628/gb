@@ -7,7 +7,6 @@ module Gitl
 
   class Command < CLAide::Command
 
-    require 'sub_command'
     require 'commands/init'
     require 'commands/update'
     require 'commands/start'

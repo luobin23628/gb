@@ -8,10 +8,8 @@ require 'yaml'
 
 module Gitl
   class SubCommand < Command
-    require 'commands/init'
 
     self.ignore_in_command_lookup = true
-
     attr_reader :config
 
     def self.options
