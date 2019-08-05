@@ -1,6 +1,6 @@
 require 'command'
 require 'yaml'
-require 'config/yml_config'
+require 'config/gitl_config'
 require 'colored2'
 
 module Gitl
@@ -14,14 +14,21 @@ module Gitl
     DESC
 
     def run
+      threads = []
       self.config.projects.each do |project|
-        project_path = File.expand_path(project.name, './')
-        if File.exist?(project_path)
-          puts project.name + ' exists, skip.'
-        else
-          g = Git.clone(project.git, project.name, :path => './')
+        t = Thread.new do
+          puts project.name
+          project_path = File.expand_path(project.name, './')
+          if File.exist?(project_path)
+            puts project.name + ' exists, skip.'
+          else
+            Git.clone_without_env(project.git, project.name, :path => './')
+          end
         end
-
+        threads << t
+      end
+      threads.each do |t| 
+        t.join
       end
     end
   end

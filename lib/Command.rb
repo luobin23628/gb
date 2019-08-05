@@ -2,52 +2,8 @@
 require 'claide'
 require 'rubygems'
 require 'colored2'
-require 'git'
 require 'gitlab'
-
-module Patches
-  module Git
-    module Base
-      def track(remote, branch)
-        self.lib.track(remote, branch)
-      end
-
-      def setLogger(logger)
-        self.lib.setLogger(logger)
-      end
-    end
-    module Lib
-      def initialize(*args)
-        super
-        # @logger = Logger.new(STDOUT)
-      end
-
-      def setLogger(logger)
-        @logger = logger
-      end
-
-      def run_command(git_cmd, &block)
-        git_cmd = git_cmd.gsub(/2>&1$/, '')
-        return IO.popen(git_cmd, &block) if block_given?
-
-        `#{git_cmd}`.chomp
-      end
-
-      def track(remote, branch)
-        arr_opts = []
-        arr_opts << '-u'
-        arr_opts << "#{remote}/#{branch}"
-        command('branch', arr_opts)
-      end
-
-    end
-  end
-end
-
-
-Git::Lib.prepend(Patches::Git::Lib)
-Git::Base.prepend(Patches::Git::Base)
-
+require 'git_ext'
 
 module Gitl
   class Error < StandardError; end
@@ -79,7 +35,7 @@ module Gitl
       if yml.nil?
         yml = 'Gitl.yml'
       end
-      @config = YmlConfig.load_file(yml)
+      @config = GitlConfig.load_file(yml)
       super
     end
 
