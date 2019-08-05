@@ -1,5 +1,5 @@
 module Gitl
-  class YmlConfig
+  class GitlConfig
 
     attr_reader :projects
     attr_reader :gitlab
@@ -18,7 +18,7 @@ module Gitl
 
     def self.load_file(yaml_filename)
       node = YAML.load_file(yaml_filename)
-      return YmlConfig.new(node)
+      return GitlConfig.new(node)
     end
 
     class ProjectConfig

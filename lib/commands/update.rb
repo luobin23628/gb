@@ -1,6 +1,6 @@
 require 'command'
 require 'yaml'
-require 'config/yml_config'
+require 'config/gitl_config'
 require 'colored2'
 
 module Gitl

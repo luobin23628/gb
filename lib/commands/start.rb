@@ -14,9 +14,16 @@ module Gitl
         CLAide::Argument.new('remote_branch', true, false),
     ]
 
+    def self.options
+      [
+          ["--force", "忽略分支是否存在，强制执行"],
+      ].concat(super)
+    end
+
     def initialize(argv)
       @working_branch = argv.shift_argument
       @remote_branch = argv.shift_argument
+      @force = argv.option('force')
       super
     end
 
@@ -43,7 +50,7 @@ module Gitl
         end
 
         if self.verbose?
-          g.setLogger(Logger.new(STDOUT))
+          # g.setLogger(Logger.new(STDOUT))
         end
 
         check_uncommit(g, project.name)
@@ -51,7 +58,7 @@ module Gitl
         # 更新本地代码
         # g.pull(remote, g.current_branch)
 
-        if !g.is_remote_branch?(@remote_branch)
+        if !g.is_remote_branch?(@remote_branch) && !@force
           raise Error.new("remote branch '#{@remote_branch}' does not exist for project '#{project.name}'.")
         end
 
@@ -88,7 +95,7 @@ module Gitl
         # push到origin
         g.push(remote, @working_branch)
 
-        puts "Create branch '#{@working_branch}' from #{@remote_branch} and push to #{remote} success."
+        puts "Create branch '#{@working_branch}' from #{@remote_branch} and push to #{remote} success.\n"
 
       end
     end
