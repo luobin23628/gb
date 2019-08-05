@@ -3,7 +3,7 @@ require 'sub_command'
 
 module Gitl
 
-  class Update < SubCommand
+  class Sync < SubCommand
 
     self.summary = '根据yml配置，更新代码'
 
@@ -21,7 +21,8 @@ module Gitl
           g.pull("origin", g.current_branch)
 
         else
-          raise Error.new("please run gitl init.")
+          help!"please run 'gitl init' first."
+          break
         end
 
       end

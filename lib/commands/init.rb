@@ -26,6 +26,7 @@ module Gitl
       threads.each do |t| 
         t.join
       end
+      puts "#{self.config.projects.size} projects init success.".green
     end
   end
 

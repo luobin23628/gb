@@ -21,19 +21,15 @@ module Gitl
 
     def initialize(argv)
       yml = argv.option('config')
-      if self.class == Gitl::Command
-        super
-      else
-        if yml.nil?
-          yml = 'Gitl.yml'
-        end
-        if File.exist?(yml)
-          @config = GitlConfig.load_file(yml)
-        else
-          help! 'config do not exist.'
-        end
-        super
+      if yml.nil?
+        yml = 'Gitl.yml'
       end
+      if File.exist?(yml)
+        @config = GitlConfig.load_file(yml)
+      else
+        help! 'config do not exist.'
+      end
+      super
     end
 
     def validate!

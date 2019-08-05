@@ -8,7 +8,7 @@ module Gitl
   class Command < CLAide::Command
 
     require 'commands/init'
-    require 'commands/update'
+    require 'commands/sync'
     require 'commands/start'
     require 'commands/review'
     require 'commands/tag'
@@ -20,7 +20,6 @@ module Gitl
 
     def self.run(argv)
       help! 'You cannot run gitl as root.' if Process.uid == 0 && !Gem.win_platform?
-
       super(argv)
     end
 
