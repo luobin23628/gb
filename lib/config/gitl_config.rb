@@ -3,8 +3,11 @@ module Gitl
 
     attr_reader :projects
     attr_reader :gitlab
+    attr_reader :config_path
 
-    def initialize(node)
+    def initialize(config_path, node)
+      @config_path = config_path
+
       gitlab = node['gitlab']
       @gitlab = GitlabConfig.new(gitlab)
 
@@ -16,9 +19,9 @@ module Gitl
       end
     end
 
-    def self.load_file(yaml_filename)
-      node = YAML.load_file(yaml_filename)
-      return GitlConfig.new(node)
+    def self.load_file(config_path)
+      node = YAML.load_file(config_path)
+      yml = GitlConfig.new(config_path, node)
     end
 
     class ProjectConfig

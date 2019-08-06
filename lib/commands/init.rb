@@ -12,7 +12,7 @@ module Gitl
 
     def run
       threads = []
-      self.config.projects.each do |project|
+      self.gitl_config.projects.each do |project|
         t = Thread.new do
           project_path = File.expand_path(project.name, './')
           if File.exist?(project_path)
@@ -26,7 +26,7 @@ module Gitl
       threads.each do |t| 
         t.join
       end
-      puts "#{self.config.projects.size} projects init success.".green
+      puts "#{self.gitl_config.projects.size} projects init success.".green
     end
   end
 

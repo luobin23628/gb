@@ -21,7 +21,7 @@ module Patches
     module Lib
       def initialize(*args)
         super
-        @logger = Logger.new(STDOUT)
+        # @logger = Logger.new(STDOUT)
       end
 
       def run_command(git_cmd, &block)
@@ -46,7 +46,7 @@ module Patches
         arr_opts << '--bare' if opts[:bare]
         arr_opts << '--branch' << opts[:branch] if opts[:branch]
         arr_opts << '--depth' << opts[:depth].to_i if opts[:depth] && opts[:depth].to_i > 0
-        arr_opts << '--config' << opts[:config] if opts[:config]
+        arr_opts << '--config' << opts[:gitl_config] if opts[:gitl_config]
         arr_opts << '--origin' << opts[:remote] || opts[:origin] if opts[:remote] || opts[:origin]
         arr_opts << '--recursive' if opts[:recursive]
         arr_opts << "--mirror" if opts[:mirror]

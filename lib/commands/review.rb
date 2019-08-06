@@ -49,11 +49,11 @@ module Gitl
       Gitlab.configure do |config|
         # set an API endpoint
         # API endpoint URL, default: ENV['GITLAB_API_ENDPOINT']
-        config.endpoint = self.config.gitlab.endpoint
+        config.endpoint = self.gitl_config.gitlab.endpoint
 
         # set a user private token
         # user's private token or OAuth2 access token, default: ENV['GITLAB_API_PRIVATE_TOKEN']
-        config.private_token = self.config.gitlab.private_token
+        config.private_token = self.gitl_config.gitlab.private_token
 
         # user agent
         config.user_agent = "gitl ruby gem[#{VERSION}"
@@ -61,7 +61,7 @@ module Gitl
 
       user = gitlab_search_user(@assignee)
 
-      self.config.projects.each do |project|
+      self.gitl_config.projects.each do |project|
         project_path = File.expand_path(project.name, './')
         if File.exist?(project_path)
           remote = 'origin'

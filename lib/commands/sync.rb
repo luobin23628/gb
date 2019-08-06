@@ -12,7 +12,7 @@ module Gitl
     DESC
 
     def run
-      self.config.projects.each do |project|
+      self.gitl_config.projects.each do |project|
         project_path = File.expand_path(project.name, './')
 
         if File.exist?(project_path)

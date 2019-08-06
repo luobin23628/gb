@@ -10,7 +10,7 @@ module Gitl
   class SubCommand < Command
 
     self.ignore_in_command_lookup = true
-    attr_reader :config
+    attr_reader :gitl_config
 
     def self.options
       [
@@ -25,7 +25,7 @@ module Gitl
         yml = 'Gitl.yml'
       end
       if File.exist?(yml)
-        @config = GitlConfig.load_file(yml)
+        @gitl_config = GitlConfig.load_file(yml)
       else
         help! 'config do not exist.'
       end
@@ -34,9 +34,30 @@ module Gitl
 
     def validate!
       super
-      if @config.nil?
+      if @gitl_config.nil?
         help! 'config is required.'
       end
+    end
+
+    def workspace_config
+      if @workspace_config.nil?
+        filename = '.gitl'
+        # workspace_config_path = File.expand_path(filename, File.dirname(self.gitl_config.config_path))
+        workspace_config_path = filename
+        if !File.exist?(workspace_config_path)
+          help! 'workspace config not found.'
+        end
+        @workspace_config = WorkSpaceConfig.load_file(workspace_config_path)
+      end
+      @workspace_config
+    end
+
+    def save_workspace_config(workspace_config)
+      filename = '.gitl'
+      # workspace_config_path = File.expand_path(filename, File.dirname(self.gitl_config.config_path))
+      workspace_config_path = filename
+      workspace_config.save(workspace_config_path)
+      @workspace_config = workspace_config
     end
 
     def check_uncommit(g, project_name)
