@@ -23,6 +23,19 @@ module Gitl
       super(argv)
     end
 
+    def self.handle_exception(command, exception)
+      if exception.is_a?(Error)
+        puts exception.message.red
+        if command.nil? || command.verbose?
+          puts
+          puts(*exception.backtrace)
+        end
+        exit(1)
+      else
+        super
+      end
+    end
+
     def self.report_error(exception)
       case exception
       when Interrupt
