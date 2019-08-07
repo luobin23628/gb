@@ -11,12 +11,15 @@ module Gitl
     DESC
 
     def run
+      mutex = Mutex.new
       threads = []
       self.gitl_config.projects.each do |project|
         t = Thread.new do
           project_path = File.expand_path(project.name, './')
           if File.exist?(project_path)
-            puts project.name + ' exists, skip.'
+            mutex.synchronize do
+              info project.name + ' exists, skip.'
+            end
           else
             Git.clone_without_env(project.git, project.name, :path => './')
           end
