@@ -1,5 +1,5 @@
 require 'claide'
-require '../lib/config/work_space_config'
+require 'config/work_space_config'
 
 module Gitl
   class Error < StandardError; end
