@@ -1,7 +1,6 @@
 projects:
   -
     name: tianxiao-base-iphone-sdk
-#    git: http://{username}:{password}@git.tianxiao100.com/tianxiao-ios/tianxiao/tianxiao-base-iphone-sdk.git
     git: git@git.tianxiao100.com:tianxiao-ios/tianxiao/tianxiao-base-iphone-sdk.git
     branch: master
   -
