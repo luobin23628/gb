@@ -12,16 +12,25 @@ module Gitl
     DESC
 
     def run
+      workspace_config = self.workspace_config
+
+      info "current work branch '#{workspace_config.workspace_branch}', remote branch '#{workspace_config.remote_branch}'."
+
       self.gitl_config.projects.each do |project|
         project_path = File.expand_path(project.name, './')
 
         if File.exist?(project_path)
-          puts project.name + ' exists, skip.'
+          info "sync project '#{project.name}'..."
           g = Git.open(project_path)
-          g.pull("origin", g.current_branch)
+          if workspace_config.workspace_branch != g.current_branch
+            error "current branch is not work branch(#{workspace_config.workspace_branch})."
+            exit(1)
+          end
+          g.pull("origin", workspace_config.remote_branch)
+          puts
 
         else
-          help!"please run 'gitl init' first."
+          error "please run 'gitl init' first."
           break
         end
 
