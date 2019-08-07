@@ -10,7 +10,8 @@ module Gitl
     require 'commands/sync'
     require 'commands/start'
     require 'commands/review'
-    require 'commands/tag'
+    require 'commands/create_tag'
+    require 'commands/delete_tag'
 
     self.abstract_command = true
     self.command = 'gitl'
@@ -28,6 +29,14 @@ module Gitl
         if command.nil? || command.verbose?
           puts
           puts(*exception.backtrace)
+        end
+        exit(1)
+      elsif exception.is_a?(Gitlab::Error::ResponseError)
+        if command.nil? || command.verbose?
+          puts(exception.message.red)
+          puts(*exception.backtrace)
+        else
+          puts exception.response_message.red
         end
         exit(1)
       else

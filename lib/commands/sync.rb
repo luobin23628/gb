@@ -5,7 +5,7 @@ module Gitl
 
   class Sync < SubCommand
 
-    self.summary = '根据yml配置，更新代码'
+    self.summary = '更新工作分支代码'
 
     self.description = <<-DESC
       根据yml配置，更新代码.
