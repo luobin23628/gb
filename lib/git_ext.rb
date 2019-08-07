@@ -17,6 +17,10 @@ module Patches
         self.lib.track(remote, branch)
       end
 
+      def pull_opts(remote = 'origin', branch = 'master', opts = {})
+        self.lib.pull_opts(remote, branch, opts)
+      end
+
     end
     module Lib
       def initialize(*args)
@@ -36,6 +40,14 @@ module Patches
         arr_opts << '-u'
         arr_opts << "#{remote}/#{branch}"
         command('branch', arr_opts)
+      end
+
+      def pull_opts(remote='origin', branch='master', opts={})
+        arr_opts = []
+        arr_opts << remote
+        arr_opts << branch
+        arr_opts << '--prune' if opts[:p]
+        command('pull', arr_opts)
       end
 
       def clone_without_env(repository, name, opts = {})
