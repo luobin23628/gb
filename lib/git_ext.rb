@@ -109,9 +109,24 @@ module Patches
       end
 
     end
+
+    module Status
+      def fetch_untracked
+        ignore = @base.lib.ignored_files
+
+        Dir.chdir(@base.dir.path) do
+          Dir.glob('**/*', File::FNM_DOTMATCH) do |file|
+            next if @files[file] || File.directory?(file) ||
+                ignore.include?(file) || file =~ %r{^.git\/.+} || file =~ %r{^(.*\/)?.gitkeep$}
+
+            @files[file] = { path: file, untracked: true }
+          end
+        end
+      end
+    end
   end
 end
 
-
+Git::Status.prepend(Patches::Git::Status)
 Git::Lib.prepend(Patches::Git::Lib)
 Git::Base.prepend(Patches::Git::Base)
