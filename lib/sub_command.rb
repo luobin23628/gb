@@ -45,7 +45,7 @@ module Gitl
         # workspace_config_path = File.expand_path(filename, File.dirname(self.gitl_config.config_path))
         workspace_config_path = filename
         if !File.exist?(workspace_config_path)
-          help! 'workspace config not found.'
+          help! "workspace config not found. please run 'gitl start' first."
         end
         @workspace_config = WorkSpaceConfig.load_file(workspace_config_path)
       end

@@ -46,6 +46,15 @@ module Gitl
         raise exception
       end
     end
+
+    def info(message)
+      puts(message.green)
+    end
+
+    def error(message)
+      puts(message.red)
+    end
+
   end
 
 end

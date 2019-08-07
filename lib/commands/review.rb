@@ -65,14 +65,14 @@ module Gitl
         project_path = File.expand_path(project.name, './')
         if File.exist?(project_path)
           remote = 'origin'
-          puts "create branch '#{@working_branch}' for project '#{project.name}'"
+          info "create branch '#{@working_branch}' for project '#{project.name}'"
           g = Git.open(project_path)
         else
           g = Git.clone(project.git, project.name, :path => './')
         end
 
         gitlab_project = gitlab_search_project(project.name)
-        puts "find project #{gitlab_project.name} on #{gitlab_project.web_url}."
+        info "find project #{gitlab_project.name} on #{gitlab_project.web_url}."
 
         unless g.is_remote_branch?(@working_branch)
           raise Error.new("branch '#{@working_branch}' not exist in remote '#{remote}'.")
@@ -98,7 +98,8 @@ module Gitl
             puts ""
           end
         else
-          puts "can't find new commit on #{@working_branch} to #{@remote_branch} in project #{project.name}."
+          info "can't find new commit on #{@working_branch} to #{@remote_branch} in project #{project.name}."
+          puts
           next
         end
 
@@ -125,11 +126,12 @@ module Gitl
             end
           end
         else
-          puts "can't find diff between #{@working_branch} and #{@remote_branch} in project #{project.name}."
+          info "can't find diff between #{@working_branch} and #{@remote_branch} in project #{project.name}."
+          puts
           next
         end
 
-        puts "\nPlease input merge request title for project '#{project.name}'"
+        info "\nPlease input merge request title for project '#{project.name}'"
         title = STDIN.gets.chomp
         if title.length == 0
           raise Error.new("merge request title must not be empty.")
@@ -146,10 +148,11 @@ module Gitl
 
         merge_request = gitlab_create_merge_request(gitlab_project.id, "dev", @working_branch, @remote_branch, user ? user.id : "")
         if merge_request
-          puts "create merge request for #{project.name} success. see detail url:#{merge_request.web_url}"
+          info "create merge request for #{project.name} success. see detail url:#{merge_request.web_url}"
         else
           exit(false)
         end
+        puts
 
       end
     end
@@ -157,11 +160,11 @@ module Gitl
     def gitlab_search_user(assignee)
       users = Gitlab.user_search(assignee)
       if users.size > 1
-        puts "Find more than one user. you means which one?"
+        info "Find more than one user. you means which one?"
         users.each do |user|
           print user.name + '  '
         end
-        puts ""
+        info ""
         raise Error.new("find #{users.size} user named #{project.name}")
       elsif users.size == 1
         user = users[0]
@@ -174,7 +177,7 @@ module Gitl
     def gitlab_search_project(project_name)
       projects = Gitlab.project_search(project_name)
       if projects.size > 1
-        puts "find #{projects.size} project named #{project_name}. you means which one?"
+        info "find #{projects.size} project named #{project_name}. you means which one?"
         projects.each do |project|
           print project.name + '  '
         end

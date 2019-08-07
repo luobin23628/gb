@@ -102,6 +102,8 @@ module Gitl
         puts "push branch '#{@working_branch}' to remote for project '#{project.name}'.".green
         # push到origin
         g.push(remote, @working_branch)
+
+        puts
       end
 
       #保存新的workspace配置
