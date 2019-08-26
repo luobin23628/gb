@@ -12,6 +12,7 @@ module Gitl
     require 'commands/review'
     require 'commands/create_tag'
     require 'commands/delete_tag'
+    require 'commands/create'
 
     self.abstract_command = true
     self.command = 'gitl'
