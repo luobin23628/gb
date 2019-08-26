@@ -24,7 +24,7 @@ module Gitl
     end
 
     def self.handle_exception(command, exception)
-      if exception.is_a?(Error)
+      if exception.is_a?(Error) || exception.is_a?(Git::GitExecuteError)
         puts exception.message.red
         if command.nil? || command.verbose?
           puts
@@ -36,7 +36,7 @@ module Gitl
           puts(exception.message.red)
           puts(*exception.backtrace)
         else
-          puts exception.response_message.red
+          puts exception.message.red
         end
         exit(1)
       else

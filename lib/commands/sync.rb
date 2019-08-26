@@ -12,6 +12,7 @@ module Gitl
     DESC
 
     def run
+      remote = 'origin'
       workspace_config = self.workspace_config
 
       info "current work branch '#{workspace_config.workspace_branch}', remote branch '#{workspace_config.remote_branch}'."
@@ -26,6 +27,8 @@ module Gitl
             error "current branch is not work branch(#{workspace_config.workspace_branch})."
             exit(1)
           end
+          g.fetch(remote, :p => true, :t => true)
+          g.pull("origin", workspace_config.workspace_branch)
           g.pull("origin", workspace_config.remote_branch)
           puts
 

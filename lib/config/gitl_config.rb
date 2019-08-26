@@ -27,12 +27,10 @@ module Gitl
     class ProjectConfig
       attr_reader :name
       attr_reader :git
-      attr_reader :branch
 
       def initialize(node)
         @name = node['name']
         @git = node['git']
-        @branch = node['branch']
       end
 
     end
