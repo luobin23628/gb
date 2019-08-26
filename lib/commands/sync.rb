@@ -11,7 +11,8 @@ module Gitl
       根据yml配置，更新代码.
     DESC
 
-    def run
+    def run_in_workspace
+
       remote = 'origin'
       workspace_config = self.workspace_config
 

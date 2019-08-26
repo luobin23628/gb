@@ -14,29 +14,58 @@ module Gitl
 
     def self.options
       [
-          %w(--config=[Gitl.yml] gitl配置, 默认为Gitl.yml)
-      # ['--config=[Gitl.yml]', 'gitl配置, 默认为Gitl.yml'],
+          ['--config=[Gitl.yml]', 'gitl配置, 默认为Gitl.yml'],
       ].concat(super)
     end
 
     def initialize(argv)
-      yml = argv.option('config')
-      if yml.nil?
-        yml = 'Gitl.yml'
-      end
-      if File.exist?(yml)
-        @gitl_config = GitlConfig.load_file(yml)
-      else
-        help! 'config do not exist.'
+      @yml = argv.option('config')
+      if @yml.nil?
+        @yml = 'Gitl.yml'
       end
       super
     end
 
     def validate!
       super
-      if @gitl_config.nil?
+    end
+
+    def run
+      workspace_path = "./"
+      find_workspace = false;
+      begin
+        result = nil
+        Dir.chdir(workspace_path) do
+          result = Dir.glob('.gitl', File::FNM_DOTMATCH)
+        end
+        if result.length > 0
+          find_workspace = true
+          break
+        else
+          workspace_path = File.expand_path("../", workspace_path)
+        end
+      end while workspace_path.length > 0 && workspace_path != "/"
+
+      if find_workspace
+        Dir.chdir(workspace_path) do
+          self.run_in_workspace()
+        end
+      else
+        raise Error.new("Current path is not gitl workspace.")
+      end
+    end
+
+    def run_in_workspace
+
+    end
+
+    def gitl_config
+      if File.exist?(@yml)
+        @gitl_config = GitlConfig.load_file(@yml)
+      else
         help! 'config is required.'
       end
+      @gitl_config
     end
 
     def workspace_config

@@ -45,7 +45,7 @@ module Gitl
       # end
     end
 
-    def run
+    def run_in_workspace
 
       @working_branch = self.workspace_config.workspace_branch
       @remote_branch = self.workspace_config.remote_branch
@@ -66,6 +66,7 @@ module Gitl
         config.user_agent = "gitl ruby gem[#{VERSION}"
       end
 
+      user = nil
       if !@assignee.nil?
         user = gitlab_search_user(@assignee)
       end
@@ -154,7 +155,7 @@ module Gitl
             info "\nSelect user name or index for review."
             input_user = STDIN.gets.chomp
             if input_user =~ /[[:digit:]]/
-              user = users[input_user.to_i]
+              user = users[input_user.to_i - 1]
             else
               user = gitlab_search_user(input_user)
             end

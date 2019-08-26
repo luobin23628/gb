@@ -21,7 +21,19 @@ module Gitl
 
     def self.load_file(config_path)
       node = YAML.load_file(config_path)
-      yml = GitlConfig.new(config_path, node)
+      GitlConfig.new(config_path, node)
+    end
+
+    def self.load_yml(yml)
+      node = YAML.load(yml)
+      GitlConfig.new(nil, node)
+    end
+
+    def to_dictionary
+      projects = self.projects.map do |project|
+        project.to_dictionary
+      end
+      {"projects"=>projects, "gitlab"=>self.gitlab.to_dictionary}
     end
 
     class ProjectConfig
@@ -33,15 +45,23 @@ module Gitl
         @git = node['git']
       end
 
+      def to_dictionary
+        {"name"=>self.name, "git"=>self.git}
+      end
+
     end
 
     class GitlabConfig
       attr_reader :endpoint
-      attr_reader :private_token
+      attr_accessor :private_token
 
       def initialize(node)
         @endpoint = node['endpoint']
         @private_token = node['private_token']
+      end
+
+      def to_dictionary
+        {"endpoint"=>self.endpoint, "private_token"=>private_token}
       end
 
     end
