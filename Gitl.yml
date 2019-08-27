@@ -39,4 +39,4 @@ gitlab:
   endpoint: http://git.tianxiao100.com/api/v4
   # set a your private token
   # user's private token or OAuth2 access token
-  private_token: Stm9qFT72FmeJeEPFXjq
+  private_token: TODO

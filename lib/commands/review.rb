@@ -249,7 +249,7 @@ module Gitl
         user.username == 'root'
       }
       if users.size > 0
-        info "Find more than one user."
+        info "Find user to assign."
         users.each_with_index do |user, index|
           puts "#{index + 1}、#{user.username}（#{user.name})".green
         end
