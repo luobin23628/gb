@@ -1,8 +1,7 @@
 #!/usr/bin/env ruby
 
-require 'gitl'
 require 'command'
 
 
-Gitl::Command::run(ARGV)
+Glb::Command::run(ARGV)
 

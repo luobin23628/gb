@@ -1,5 +1,5 @@
-module Gitl
-  class GitlConfig
+module Glb
+  class GlbConfig
 
     attr_reader :projects
     attr_reader :gitlab
@@ -21,12 +21,12 @@ module Gitl
 
     def self.load_file(config_path)
       node = YAML.load_file(config_path)
-      GitlConfig.new(config_path, node)
+      GlbConfig.new(config_path, node)
     end
 
     def self.load_yml(yml)
       node = YAML.load(yml)
-      GitlConfig.new(nil, node)
+      GlbConfig.new(nil, node)
     end
 
     def to_dictionary

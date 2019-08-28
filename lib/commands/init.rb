@@ -1,6 +1,6 @@
 require 'sub_command'
 
-module Gitl
+module Glb
 
   class Init < SubCommand
 
@@ -13,7 +13,7 @@ module Gitl
     def run
       mutex = Mutex.new
       threads = []
-      self.gitl_config.projects.each do |project|
+      self.glb_config.projects.each do |project|
         t = Thread.new do
           project_path = File.expand_path(project.name, './')
           if File.exist?(project_path)
@@ -29,7 +29,7 @@ module Gitl
       threads.each do |t| 
         t.join
       end
-      puts "#{self.gitl_config.projects.size} projects init success.".green
+      puts "#{self.glb_config.projects.size} projects init success.".green
     end
   end
 

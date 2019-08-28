@@ -1,7 +1,7 @@
 require 'claide'
 require 'config/work_space_config'
 
-module Gitl
+module Glb
   class Error < StandardError; end
 
   class Command < CLAide::Command
@@ -15,12 +15,12 @@ module Gitl
     require 'commands/create'
 
     self.abstract_command = true
-    self.command = 'gitl'
+    self.command = 'glb'
     self.version = VERSION
-    self.description = 'Gitl, the tianxiao gitlab manager.'
+    self.description = 'Glb, the tianxiao gitlab manager.'
 
     def self.run(argv)
-      help! 'You cannot run gitl as root.' if Process.uid == 0 && !Gem.win_platform?
+      help! 'You cannot run glb as root.' if Process.uid == 0 && !Gem.win_platform?
       super(argv)
     end
 

@@ -2,13 +2,13 @@ require 'sub_command'
 require "open-uri"
 require 'pathname'
 
-module Gitl
+module Glb
   class Create < SubCommand
 
-    self.summary = '创建并配置Gitl.yml.'
+    self.summary = '创建并配置Glb.yml.'
 
     self.description = <<-DESC
-      创建并配置Gitl.yml.
+      创建并配置Glb.yml.
     DESC
 
     def self.options
@@ -31,7 +31,7 @@ module Gitl
     end
 
     def run
-      local_config_path = "./Gitl.yml"
+      local_config_path = "./Glb.yml"
       if File.exist?(local_config_path)
         raise Error.new("'#{local_config_path}' exists.")
       end
@@ -39,7 +39,7 @@ module Gitl
       if @config_url.nil?
         path = File.expand_path("../../Gitl.yml", File.dirname(__FILE__))
         if File.exist?(path)
-          gitl_config = GitlConfig.load_file(path)
+          glb_config = GlbConfig.load_file(path)
         else
           raise Error.new("'#{path}' not found.")
         end
@@ -48,7 +48,7 @@ module Gitl
         open(@config_url) do |http|
           yml_response = http.read
         end
-        gitl_config = GitlConfig.load_yml(yml_response)
+        glb_config = GlbConfig.load_yml(yml_response)
       end
 
       begin
@@ -56,10 +56,10 @@ module Gitl
         private_token = STDIN.gets.chomp
       end until private_token.length > 0
 
-      gitl_config.gitlab.private_token = private_token
+      glb_config.gitlab.private_token = private_token
 
-      File.open("./Gitl.yml", 'w') do |file|
-        Psych.dump(gitl_config.to_dictionary, file)
+      File.open("./Glb.yml", 'w') do |file|
+        Psych.dump(glb_config.to_dictionary, file)
       end
 
     end

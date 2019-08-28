@@ -1,7 +1,7 @@
 require 'sub_command'
 
 
-module Gitl
+module Glb
 
   class Sync < SubCommand
 
@@ -18,7 +18,7 @@ module Gitl
 
       info "current work branch '#{workspace_config.workspace_branch}', remote branch '#{workspace_config.remote_branch}'."
 
-      self.gitl_config.projects.each do |project|
+      self.glb_config.projects.each do |project|
         project_path = File.expand_path(project.name, './')
 
         if File.exist?(project_path)
@@ -34,7 +34,7 @@ module Gitl
           puts
 
         else
-          error "please run 'gitl init' first."
+          error "please run 'glb init' first."
           break
         end
 

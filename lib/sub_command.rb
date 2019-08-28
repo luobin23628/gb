@@ -1,27 +1,27 @@
 require 'command'
 require 'rubygems'
-require 'config/gitl_config'
+require 'config/glb_config'
 require 'colored2'
 require 'gitlab'
 require 'git_ext'
 require 'yaml'
 
-module Gitl
+module Glb
   class SubCommand < Command
 
     self.ignore_in_command_lookup = true
-    attr_reader :gitl_config
+    attr_reader :glb_config
 
     def self.options
       [
-          ['--config=[Gitl.yml]', 'gitl配置, 默认为Gitl.yml'],
+          ['--config=[Glb.yml]', 'glb配置, 默认为Glb.yml'],
       ].concat(super)
     end
 
     def initialize(argv)
       @yml = argv.option('config')
       if @yml.nil?
-        @yml = 'Gitl.yml'
+        @yml = 'Glb.yml'
       end
       super
     end
@@ -36,7 +36,7 @@ module Gitl
       begin
         result = nil
         Dir.chdir(workspace_path) do
-          result = Dir.glob('.gitl', File::FNM_DOTMATCH)
+          result = Dir.glob('.glb', File::FNM_DOTMATCH)
         end
         if result.length > 0
           find_workspace = true
@@ -51,7 +51,7 @@ module Gitl
           self.run_in_workspace()
         end
       else
-        raise Error.new("Current path is not gitl workspace.")
+        raise Error.new("Current path is not glb workspace.")
       end
     end
 
@@ -59,22 +59,22 @@ module Gitl
 
     end
 
-    def gitl_config
+    def glb_config
       if File.exist?(@yml)
-        @gitl_config = GitlConfig.load_file(@yml)
+        @glb_config = GlbConfig.load_file(@yml)
       else
         help! 'config is required.'
       end
-      @gitl_config
+      @glb_config
     end
 
     def workspace_config
       if @workspace_config.nil?
-        filename = '.gitl'
-        # workspace_config_path = File.expand_path(filename, File.dirname(self.gitl_config.config_path))
+        filename = '.glb'
+        # workspace_config_path = File.expand_path(filename, File.dirname(self.glb_config.config_path))
         workspace_config_path = filename
         if !File.exist?(workspace_config_path)
-          help! "workspace config not found. please run 'gitl start' first."
+          help! "workspace config not found. please run 'glb start' first."
         end
         @workspace_config = WorkSpaceConfig.load_file(workspace_config_path)
       end
@@ -82,8 +82,8 @@ module Gitl
     end
 
     def save_workspace_config(workspace_config)
-      filename = '.gitl'
-      # workspace_config_path = File.expand_path(filename, File.dirname(self.gitl_config.config_path))
+      filename = '.glb'
+      # workspace_config_path = File.expand_path(filename, File.dirname(self.glb_config.config_path))
       workspace_config_path = filename
       workspace_config.save(workspace_config_path)
       @workspace_config = workspace_config

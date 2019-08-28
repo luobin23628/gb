@@ -1,6 +1,6 @@
 require 'sub_command'
 
-module Gitl
+module Glb
   class Start < SubCommand
 
     self.summary = '创建对应工作分支，并同步到gitlab.'
@@ -41,7 +41,7 @@ module Gitl
       remote = 'origin'
       workspace_config = WorkSpaceConfig.new(@remote_branch, @working_branch)
 
-      self.gitl_config.projects.each do |project|
+      self.glb_config.projects.each do |project|
         project_path = File.expand_path(project.name, './')
         if File.exist?(project_path)
           g = Git.open(project_path)

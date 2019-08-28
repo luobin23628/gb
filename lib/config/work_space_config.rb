@@ -1,5 +1,5 @@
 
-module Gitl
+module Glb
   class WorkSpaceConfig
     attr_reader :remote_branch
     attr_reader :workspace_branch
