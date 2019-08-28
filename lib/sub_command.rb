@@ -51,7 +51,7 @@ module Glb
           self.run_in_workspace()
         end
       else
-        raise Error.new("Current path is not glb workspace.")
+        raise Error.new("Current path is not glb workspace. please run 'glb start' first.")
       end
     end
 
