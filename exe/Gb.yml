@@ -1,0 +1,27 @@
+---
+projects:
+- name: tianxiao-base-iphone-sdk
+  git: git@git.tianxiao100.com:tianxiao-ios/tianxiao/tianxiao-base-iphone-sdk.git
+#- name: tianxiao-iphone
+#  git: git@git.tianxiao100.com:tianxiao-ios/tianxiao/tianxiao-iphone.git
+#- name: tianxiao-crm-iphone-sdk
+#  git: git@git.tianxiao100.com:tianxiao-ios/tianxiao/tianxiao-crm-iphone-sdk.git
+#- name: tianxiao-netschool-iphone-sdk
+#  git: git@git.tianxiao100.com:tianxiao-ios/tianxiao/tianxiao-netschool-iphone-sdk.git
+#- name: tianxiao-erp-iphone-sdk
+#  git: git@git.tianxiao100.com:tianxiao-ios/tianxiao/tianxiao-erp-iphone-sdk.git
+#- name: tianxiao-marketing-iphone-sdk
+#  git: git@git.tianxiao100.com:tianxiao-ios/tianxiao/tianxiao-marketing-iphone-sdk.git
+#- name: tianxiao-person-iphone-sdk
+#  git: git@git.tianxiao100.com:tianxiao-ios/tianxiao/tianxiao-person-iphone-sdk.git
+#- name: tianxiao-im-iphone-sdk
+#  git: git@git.tianxiao100.com:tianxiao-ios/tianxiao/tianxiao-im-iphone-sdk.git
+#- name: tianxiao-welive-iphone-sdk
+#  git: git@git.tianxiao100.com:tianxiao-ios/tianxiao/tianxiao-welive-iphone-sdk.git
+#- name: tianxiao-bus-iphone-sdk
+#  git: git@git.tianxiao100.com:tianxiao-ios/tianxiao/tianxiao-bus-iphone-sdk.git
+#- name: tianxiao-core-iphone-sdk
+#  git: git@git.tianxiao100.com:tianxiao-ios/tianxiao/tianxiao-core-iphone-sdk.git
+gitlab:
+  endpoint: http://git.tianxiao100.com/api/v4
+  private_token: Stm9qFT72FmeJeEPFXjq

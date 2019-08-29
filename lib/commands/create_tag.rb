@@ -1,7 +1,7 @@
 require 'sub_command'
 
 
-module Glb
+module Gb
 
   class CreateTag < SubCommand
 
@@ -46,17 +46,17 @@ module Glb
       Gitlab.configure do |config|
         # set an API endpoint
         # API endpoint URL, default: ENV['GITLAB_API_ENDPOINT']
-        config.endpoint = self.glb_config.gitlab.endpoint
+        config.endpoint = self.gb_config.gitlab.endpoint
 
         # set a user private token
         # user's private token or OAuth2 access token, default: ENV['GITLAB_API_PRIVATE_TOKEN']
-        config.private_token = self.glb_config.gitlab.private_token
+        config.private_token = self.gb_config.gitlab.private_token
 
         # user agent
-        config.user_agent = "glb ruby gem[#{VERSION}"
+        config.user_agent = "gb ruby gem[#{VERSION}"
       end
 
-      self.glb_config.projects.each do |project|
+      self.gb_config.projects.each do |project|
         gitlab_project = gitlab_search_project(project.name)
         info "find project #{gitlab_project.name} on #{gitlab_project.web_url}."
         begin

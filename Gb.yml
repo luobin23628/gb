@@ -1,8 +1,8 @@
 projects:
 
-#  - name: tianxiao-base-iphone-sdk
+  - name: TODO
 ##    git: http://{username}:{password}@git.tianxiao100.com/tianxiao-ios/tianxiao/tianxiao-base-iphone-sdk.git
-#    git: git@git.tianxiao100.com:tianxiao-ios/tianxiao/tianxiao-base-iphone-sdk.git
+    git: TODO
 
 gitlab:
   # GitLab api url. example http://git.tianxiao100.com/api/v4

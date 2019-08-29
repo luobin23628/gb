@@ -9,4 +9,5 @@
 Gemfile.lock
 /.idea/
 vendor/cache
-.gitl
+.gb
+*.gem

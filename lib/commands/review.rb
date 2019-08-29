@@ -1,7 +1,7 @@
 require 'sub_command'
-require 'gitlab_ext'
+require 'ext/gitlab_ext'
 
-module Glb
+module Gb
   class Review < SubCommand
 
     self.summary = '创建对应工作分支，并同步到gitlab.'
@@ -56,14 +56,14 @@ module Glb
       Gitlab.configure do |config|
         # set an API endpoint
         # API endpoint URL, default: ENV['GITLAB_API_ENDPOINT']
-        config.endpoint = self.glb_config.gitlab.endpoint
+        config.endpoint = self.gb_config.gitlab.endpoint
 
         # set a user private token
         # user's private token or OAuth2 access token, default: ENV['GITLAB_API_PRIVATE_TOKEN']
-        config.private_token = self.glb_config.gitlab.private_token
+        config.private_token = self.gb_config.gitlab.private_token
 
         # user agent
-        config.user_agent = "glb ruby gem[#{VERSION}"
+        config.user_agent = "gb ruby gem[#{VERSION}"
       end
 
       user = nil
@@ -71,7 +71,7 @@ module Glb
         user = gitlab_search_user(@assignee)
       end
 
-      self.glb_config.projects.each_with_index do |project, index|
+      self.gb_config.projects.each_with_index do |project, index|
         project_path = File.expand_path(project.name, './')
         if File.exist?(project_path)
           remote = 'origin'
@@ -192,7 +192,7 @@ module Glb
             if exitstatus != 0
               raise Error.new("open chrome failed.")
             else
-              if index != self.glb_config.projects.length - 1
+              if index != self.gb_config.projects.length - 1
                 info "Please review diff, then input any to continue."
                 STDIN.gets.chomp
               end

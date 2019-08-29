@@ -1,7 +1,7 @@
 require 'sub_command'
 
 
-module Glb
+module Gb
 
   class Sync < SubCommand
 
@@ -18,7 +18,7 @@ module Glb
 
       info "current work branch '#{workspace_config.workspace_branch}', remote branch '#{workspace_config.remote_branch}'."
 
-      self.glb_config.projects.each do |project|
+      self.gb_config.projects.each do |project|
         project_path = File.expand_path(project.name, './')
 
         if File.exist?(project_path)
@@ -34,7 +34,7 @@ module Glb
           puts
 
         else
-          error "please run 'glb init' first."
+          error "please run 'gb init first."
           break
         end
 

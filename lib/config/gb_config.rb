@@ -1,5 +1,5 @@
-module Glb
-  class GlbConfig
+module Gb
+  class GbConfig
 
     attr_reader :projects
     attr_reader :gitlab
@@ -13,20 +13,22 @@ module Glb
 
       @projects = []
       projects = node['projects']
-      projects.each do |project|
-        projectConfig = ProjectConfig.new(project)
-        @projects << projectConfig
+      if !projects.nil?
+        projects.each do |project|
+          projectConfig = ProjectConfig.new(project)
+          @projects << projectConfig
+        end
       end
     end
 
     def self.load_file(config_path)
       node = YAML.load_file(config_path)
-      GlbConfig.new(config_path, node)
+      GbConfig.new(config_path, node)
     end
 
     def self.load_yml(yml)
       node = YAML.load(yml)
-      GlbConfig.new(nil, node)
+      GbConfig.new(nil, node)
     end
 
     def to_dictionary

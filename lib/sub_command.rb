@@ -1,27 +1,27 @@
 require 'command'
 require 'rubygems'
-require 'config/glb_config'
+require 'config/gb_config'
 require 'colored2'
 require 'gitlab'
-require 'git_ext'
+require 'ext/git_ext'
 require 'yaml'
 
-module Glb
+module Gb
   class SubCommand < Command
 
     self.ignore_in_command_lookup = true
-    attr_reader :glb_config
+    attr_reader :gb_config
 
     def self.options
       [
-          ['--config=[Glb.yml]', 'glb配置, 默认为Glb.yml'],
+          ['--config=[Gb.yml]', 'gb配置, 默认为Gb.yml'],
       ].concat(super)
     end
 
     def initialize(argv)
       @yml = argv.option('config')
       if @yml.nil?
-        @yml = 'Glb.yml'
+        @yml = 'Gb.yml'
       end
       super
     end
@@ -36,7 +36,7 @@ module Glb
       begin
         result = nil
         Dir.chdir(workspace_path) do
-          result = Dir.glob('.glb', File::FNM_DOTMATCH)
+          result = Dir.glob('.gb', File::FNM_DOTMATCH)
         end
         if result.length > 0
           find_workspace = true
@@ -51,7 +51,7 @@ module Glb
           self.run_in_workspace()
         end
       else
-        raise Error.new("Current path is not glb workspace. please run 'glb start' first.")
+        raise Error.new("Current path is not gb workspace. please run 'gb start' first.")
       end
     end
 
@@ -59,22 +59,22 @@ module Glb
 
     end
 
-    def glb_config
+    def gb_config
       if File.exist?(@yml)
-        @glb_config = GlbConfig.load_file(@yml)
+        @gb_config = GbConfig.load_file(@yml)
       else
         help! 'config is required.'
       end
-      @glb_config
+      @gb_config
     end
 
     def workspace_config
       if @workspace_config.nil?
-        filename = '.glb'
-        # workspace_config_path = File.expand_path(filename, File.dirname(self.glb_config.config_path))
+        filename = '.gb'
+        # workspace_config_path = File.expand_path(filename, File.dirname(self.gb_config.config_path))
         workspace_config_path = filename
         if !File.exist?(workspace_config_path)
-          help! "workspace config not found. please run 'glb start' first."
+          help! "workspace config not found. please run 'gb start' first."
         end
         @workspace_config = WorkSpaceConfig.load_file(workspace_config_path)
       end
@@ -82,8 +82,8 @@ module Glb
     end
 
     def save_workspace_config(workspace_config)
-      filename = '.glb'
-      # workspace_config_path = File.expand_path(filename, File.dirname(self.glb_config.config_path))
+      filename = '.gb'
+      # workspace_config_path = File.expand_path(filename, File.dirname(self.gb_config.config_path))
       workspace_config_path = filename
       workspace_config.save(workspace_config_path)
       @workspace_config = workspace_config

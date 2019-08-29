@@ -1,7 +1,8 @@
 require 'claide'
 require 'config/work_space_config'
+require 'gb'
 
-module Glb
+module Gb
   class Error < StandardError; end
 
   class Command < CLAide::Command
@@ -15,12 +16,12 @@ module Glb
     require 'commands/create'
 
     self.abstract_command = true
-    self.command = 'glb'
+    self.command = 'gb'
     self.version = VERSION
-    self.description = 'Glb, the tianxiao gitlab manager.'
+    self.description = 'gb, the gitlab helper.'
 
     def self.run(argv)
-      help! 'You cannot run glb as root.' if Process.uid == 0 && !Gem.win_platform?
+      help! 'You cannot run gb as root.' if Process.uid == 0 && !Gem.win_platform?
       super(argv)
     end
 

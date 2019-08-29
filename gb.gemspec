@@ -1,16 +1,16 @@
 lib = File.expand_path("lib", __dir__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-require "glb/version"
+require "gb/version"
 
 Gem::Specification.new do |spec|
-  spec.name          = "glb"
-  spec.version       = Glb::VERSION
+  spec.name          = "gb"
+  spec.version       = Gb::VERSION
   spec.authors       = ["binluo"]
   spec.email         = ["luobin23628@163.com"]
 
   spec.summary       = %q{gitlab工具}
   spec.description   = %q{方便处理多个gitlab仓库}
-  spec.homepage      = "https://github.com/luobin23628/glb"
+  spec.homepage      = "https://github.com/luobin23628/gb"
   spec.license       = "MIT"
 
   # spec.metadata["allowed_push_host"] = "TODO: Set to 'http://mygemserver.com'"

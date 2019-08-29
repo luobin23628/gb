@@ -2,6 +2,5 @@
 
 require 'command'
 
-
-Glb::Command::run(ARGV)
+Gb::Command::run(ARGV)
 
