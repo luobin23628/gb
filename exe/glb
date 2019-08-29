@@ -1,6 +1,7 @@
 #!/usr/bin/env ruby
 
 require 'command'
+require 'gb'
 
 Gb::Command::run(ARGV)
 
