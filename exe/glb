@@ -1,0 +1,6 @@
+#!/usr/bin/env ruby
+
+require 'command'
+
+Gb::Command::run(ARGV)
+
