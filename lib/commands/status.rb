@@ -20,6 +20,8 @@ module Gb
           info "for project '#{project.name}'..."
           g = Git.open(project_path)
 
+          info "current branch '#{g.current_branch}'"
+
           changed = g.status.changed
           added = g.status.added
           deleted = g.status.deleted

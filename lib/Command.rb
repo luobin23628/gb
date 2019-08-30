@@ -17,6 +17,7 @@ module Gb
     require 'commands/status'
     require 'commands/forall'
     require 'commands/merge'
+    require 'commands/workspace'
 
     self.abstract_command = true
     self.command = 'gb'
