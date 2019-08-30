@@ -9,12 +9,12 @@ module Gb
     self.description = <<-DESC
     创建gitlab merge request，注意跟review的区别是不会同步本地分支代码.
 
-    gb merge working_branch remote_branch
+    gb merge from_branch to_branch
     DESC
 
     self.arguments = [
-        CLAide::Argument.new('working_branch', true, false),
-        CLAide::Argument.new('remote_branch', true, false),
+        CLAide::Argument.new('from_branch', true, false),
+        CLAide::Argument.new('to_branch', true, false),
     ]
 
     def self.options
@@ -26,8 +26,8 @@ module Gb
     end
 
     def initialize(argv)
-      @working_branch = argv.shift_argument
-      @remote_branch = argv.shift_argument
+      @from_branch = argv.shift_argument
+      @to_branch = argv.shift_argument
       @assignee = argv.option('assignee')
       @title = argv.option('title')
       @show_diff = argv.flag?('show-diff')
@@ -36,18 +36,16 @@ module Gb
 
     def validate!
       super
-      if @working_branch.nil?
-        help! 'working_branch is required.'
+      if @from_branch.nil?
+        help! 'from_branch is required.'
       end
-      if @remote_branch.nil?
+      if @to_branch.nil?
         help! 'remote_branch is required.'
-      end
-      if @assignee.nil?
-        help! 'assignee is required.'
       end
     end
 
-    def run
+    def run_in_workspace
+      remote = "origin"
 
       # api: https://www.rubydoc.info/gems/gitlab/toplevel
       # document: https://narkoz.github.io/gitlab/cli
@@ -75,15 +73,23 @@ module Gb
         gitlab_project = gitlab_search_project(project.name)
         info "Find project #{gitlab_project.name} on #{gitlab_project.web_url}."
 
-        unless g.is_remote_branch?(@working_branch)
-          raise Error.new("Branch '#{@working_branch}' not exist in remote '#{remote}'.")
+        begin
+          Gitlab.branch(gitlab_project.id, @from_branch)
+        rescue Gitlab::Error::NotFound => error
+          raise Error.new("Branch '#{@from_branch}' not exist in remote '#{remote}'.")
+        rescue Gitlab::Error::Error => error
+          raise(error)
         end
 
-        unless g.is_remote_branch?(@remote_branch)
-          raise Error.new("Branch '#{@remote_branch}' not exist in remote '#{remote}'.")
+        begin
+          Gitlab.branch(gitlab_project.id, @to_branch)
+        rescue Gitlab::Error::NotFound => error
+          raise Error.new("Branch '#{@to_branch}' not exist in remote '#{remote}'.")
+        rescue Gitlab::Error::Error => error
+          raise(error)
         end
 
-        compare_response = Gitlab.compare(gitlab_project.id, @remote_branch, @working_branch);
+        compare_response = Gitlab.compare(gitlab_project.id, @to_branch, @from_branch);
         if compare_response.commits.size >= 1
           if @show_diff
             puts "\ncommits"
@@ -99,7 +105,7 @@ module Gb
             puts ""
           end
         else
-          info "Can't find new commit on #{@working_branch} to #{@remote_branch} in project #{project.name}."
+          info "Can't find new commit on #{@from_branch} to #{@to_branch} in project #{project.name}."
           puts
           next
         end
@@ -127,7 +133,7 @@ module Gb
             end
           end
         else
-          info "Can't find diff between #{@working_branch} and #{@remote_branch} in project #{project.name}."
+          info "Can't find diff between #{@from_branch} and #{@to_branch} in project #{project.name}."
           puts
           next
         end
@@ -160,14 +166,14 @@ module Gb
         # 总共 0 （差异 0），复用 0 （差异 0）
         # remote:
         #     remote: To create a merge request for dev-v3.9.0-luobin, visit:
-        #     remote:   http://git.tianxiao100.com/tianxiao-ios/tianxiao/tianxiao-base-iphone-sdk/merge_requests/new?merge_request%5Bsource_branch%5D=dev-v3.9.0-luobin
+        #     remote:   http://git.tianxiao100.com/tianxiao-ios/tianxiao/tianxiao-base-iphone-sdk/merge_requests/new?merge_request%5Bfrom_branch%5D=dev-v3.9.0-luobin
         # remote:
         #     To http://git.tianxiao100.com/tianxiao-ios/tianxiao/tianxiao-base-iphone-sdk.git
         # * [new branch]        dev-v3.9.0-luobin -> dev-v3.9.0-luobin
 
         begin
           merge_request = Gitlab.create_merge_request(gitlab_project.id, @title,
-                                                      { source_branch: @working_branch, target_branch: @remote_branch, assignee_id:user ? user.id : "" })
+                                                      { source_branch: @from_branch, target_branch: @to_branch, assignee_id:user ? user.id : "" })
           info "Create merge request for #{project.name} success. see detail url:#{merge_request.web_url}"
           if !Gem.win_platform?
             `open -a "/Applications/Google Chrome.app"    '#{merge_request.web_url}/diffs'`
@@ -175,15 +181,13 @@ module Gb
             if exitstatus != 0
               raise Error.new("open chrome failed.")
             else
-              if index != self.gb_config.projects.length - 1
-                info "Please review diff, then input any to continue."
-                STDIN.gets.chomp
-              end
+              # info "Please review diff, then input any to continue."
+              # STDIN.gets.chomp
             end
           end
         rescue Gitlab::Error::Conflict => error
           # merge exists
-          info "Merge request from '#{@working_branch}' to '#{@remote_branch}' exist."
+          info "Merge request from '#{@from_branch}' to '#{@to_branch}' exist."
         rescue Gitlab::Error::Error => error
           raise(error)
         end

@@ -29,7 +29,7 @@ module Gb
       end
     end
 
-    def run
+    def run_in_workspace
 
       self.gb_config.projects.each do |project|
         project_path = File.expand_path(project.name, './')

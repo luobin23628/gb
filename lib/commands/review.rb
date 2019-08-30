@@ -192,10 +192,8 @@ module Gb
             if exitstatus != 0
               raise Error.new("open chrome failed.")
             else
-              if index != self.gb_config.projects.length - 1
-                info "Please review diff, then input any to continue."
-                STDIN.gets.chomp
-              end
+              # info "Please review diff, then input any to continue."
+              # STDIN.gets.chomp
             end
           end
         rescue Gitlab::Error::Conflict => error

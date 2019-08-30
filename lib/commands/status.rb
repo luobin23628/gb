@@ -11,7 +11,7 @@ module Gb
       查看工作分支代码状态.
     DESC
 
-    def run
+    def run_in_workspace
 
       self.gb_config.projects.each do |project|
         project_path = File.expand_path(project.name, './')
