@@ -63,7 +63,7 @@ module Gb
       if File.exist?(@yml)
         @gb_config = GbConfig.load_file(@yml)
       else
-        help! 'config is required.'
+        help! "gb config not found. please run 'gb create' first."
       end
       @gb_config
     end

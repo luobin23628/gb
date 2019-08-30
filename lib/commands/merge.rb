@@ -2,18 +2,20 @@ require 'sub_command'
 require 'ext/gitlab_ext'
 
 module Gb
-  class Review < SubCommand
+  class Merge < SubCommand
 
-    self.summary = 'push工作分支到远程服务器，并创建merge request.'
+    self.summary = '创建gitlab merge request，注意跟review的区别是不会同步本地分支代码.'
 
     self.description = <<-DESC
-      push工作分支到远程服务器，并创建merge request.
+    创建gitlab merge request，注意跟review的区别是不会同步本地分支代码.
+
+    gb merge working_branch remote_branch
     DESC
 
-    # self.arguments = [
-    #     CLAide::Argument.new('working_branch', false, false),
-    #     CLAide::Argument.new('remote_branch', false, false),
-    # ]
+    self.arguments = [
+        CLAide::Argument.new('working_branch', true, false),
+        CLAide::Argument.new('remote_branch', true, false),
+    ]
 
     def self.options
       [
@@ -24,8 +26,8 @@ module Gb
     end
 
     def initialize(argv)
-      # @working_branch = argv.shift_argument
-      # @remote_branch = argv.shift_argument
+      @working_branch = argv.shift_argument
+      @remote_branch = argv.shift_argument
       @assignee = argv.option('assignee')
       @title = argv.option('title')
       @show_diff = argv.flag?('show-diff')
@@ -34,21 +36,18 @@ module Gb
 
     def validate!
       super
-      # if @working_branch.nil?
-      #   help! 'working_branch is required.'
-      # end
-      # if @remote_branch.nil?
-      #   help! 'remote_branch is required.'
-      # end
-      # if @assignee.nil?
-      #   help! 'assignee is required.'
-      # end
+      if @working_branch.nil?
+        help! 'working_branch is required.'
+      end
+      if @remote_branch.nil?
+        help! 'remote_branch is required.'
+      end
+      if @assignee.nil?
+        help! 'assignee is required.'
+      end
     end
 
-    def run_in_workspace
-
-      @working_branch = self.workspace_config.workspace_branch
-      @remote_branch = self.workspace_config.remote_branch
+    def run
 
       # api: https://www.rubydoc.info/gems/gitlab/toplevel
       # document: https://narkoz.github.io/gitlab/cli
@@ -72,14 +71,6 @@ module Gb
       end
 
       self.gb_config.projects.each_with_index do |project, index|
-        project_path = File.expand_path(project.name, './')
-        if File.exist?(project_path)
-          remote = 'origin'
-          info "Create branch '#{@working_branch}' for project '#{project.name}'"
-          g = Git.open(project_path)
-        else
-          g = Git.clone(project.git, project.name, :path => './')
-        end
 
         gitlab_project = gitlab_search_project(project.name)
         info "Find project #{gitlab_project.name} on #{gitlab_project.web_url}."
@@ -91,14 +82,6 @@ module Gb
         unless g.is_remote_branch?(@remote_branch)
           raise Error.new("Branch '#{@remote_branch}' not exist in remote '#{remote}'.")
         end
-
-        g.checkout(@working_branch)
-        # 更新本地代码
-        g.fetch(remote, :p => true, :t => true)
-        g.pull("origin", @working_branch)
-        g.pull("origin", @remote_branch)
-        # push到origin
-        g.push(remote, @working_branch)
 
         compare_response = Gitlab.compare(gitlab_project.id, @remote_branch, @working_branch);
         if compare_response.commits.size >= 1
@@ -184,7 +167,7 @@ module Gb
 
         begin
           merge_request = Gitlab.create_merge_request(gitlab_project.id, @title,
-                                      { source_branch: @working_branch, target_branch: @remote_branch, assignee_id:user ? user.id : "" })
+                                                      { source_branch: @working_branch, target_branch: @remote_branch, assignee_id:user ? user.id : "" })
           info "Create merge request for #{project.name} success. see detail url:#{merge_request.web_url}"
           if !Gem.win_platform?
             `open -a "/Applications/Google Chrome.app"    '#{merge_request.web_url}/diffs'`

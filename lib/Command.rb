@@ -14,6 +14,9 @@ module Gb
     require 'commands/create_tag'
     require 'commands/delete_tag'
     require 'commands/create'
+    require 'commands/status'
+    require 'commands/forall'
+    require 'commands/merge'
 
     self.abstract_command = true
     self.command = 'gb'
