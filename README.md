@@ -23,6 +23,7 @@ Or install it yourself as:
 ```ruby
 #创建本地文件Gb.yml，根据提示输入Gitlab的private token
 gb create
+
 #或通过在线url地址下载Gb.yml
 gb create --config_url=[url]
 ```
