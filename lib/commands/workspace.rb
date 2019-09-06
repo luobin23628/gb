@@ -16,7 +16,7 @@ module Gb
       remote = 'origin'
       workspace_config = self.workspace_config
 
-      info "current work branch '#{workspace_config.workspace_branch}'"
+      info "current work branch '#{workspace_config.work_branch}'"
       info "track remote branch '#{workspace_config.remote_branch}'."
       puts
 
@@ -27,6 +27,7 @@ module Gb
           info "Project '#{project.name}'..."
           g = Git.open(project_path)
           info "current branch '#{g.current_branch}'."
+          puts
         else
           error "please run 'gb init first."
           break

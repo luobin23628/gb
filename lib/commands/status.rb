@@ -12,6 +12,10 @@ module Gb
     DESC
 
     def run_in_workspace
+      workspace_config = self.workspace_config
+      info "current work branch '#{workspace_config.work_branch}'"
+      info "track remote branch '#{workspace_config.remote_branch}'."
+      puts
 
       self.gb_config.projects.each do |project|
         project_path = File.expand_path(project.name, './')
@@ -20,7 +24,10 @@ module Gb
           info "for project '#{project.name}'..."
           g = Git.open(project_path)
 
-          info "current branch '#{g.current_branch}'"
+          if workspace_config.work_branch != g.current_branch
+            error "current branch(#{g.current_branch}) is not work branch."
+            puts
+          end
 
           changed = g.status.changed
           added = g.status.added

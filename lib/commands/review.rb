@@ -47,7 +47,7 @@ module Gb
 
     def run_in_workspace
 
-      @working_branch = self.workspace_config.workspace_branch
+      @working_branch = self.workspace_config.work_branch
       @remote_branch = self.workspace_config.remote_branch
 
       # api: https://www.rubydoc.info/gems/gitlab/toplevel
