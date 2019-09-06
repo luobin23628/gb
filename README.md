@@ -1,7 +1,7 @@
 # Gb
 GB是针对GitLab开发的一款管理工具，使用ruby开发，简化对多个git版本库的管理，方便代码同步及代码提交review。
 
-## Installation
+## 安装
 
 Add this line to your application's Gemfile:
 
@@ -17,7 +17,7 @@ Or install it yourself as:
 
     $ gem install gb
 
-## Usage
+## 使用
 
 ### 1、创建gb配置文件Gb.yml
 ```ruby
