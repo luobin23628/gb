@@ -18,6 +18,7 @@ module Gb
     def self.options
       [
           ["--assignee=[user name]", "指定review用户名称"],
+          ["--at=[user name]", "指定要@用户名称"],
           ["--title", "merge request标题"],
           ["--show-diff", "review前是否显示变更"],
       ].concat(super)
@@ -27,6 +28,7 @@ module Gb
       # @working_branch = argv.shift_argument
       # @remote_branch = argv.shift_argument
       @assignee = argv.option('assignee')
+      @at = argv.option('at')
       @title = argv.option('title')
       @show_diff = argv.flag?('show-diff')
       super
@@ -69,6 +71,11 @@ module Gb
       user = nil
       if !@assignee.nil?
         user = gitlab_search_user(@assignee)
+      end
+
+      at_user = nil
+      if !@at.nil?
+        at_user = gitlab_search_user(@at)
       end
 
       self.gb_config.projects.each_with_index do |project, index|
@@ -151,11 +158,24 @@ module Gb
 
         if user.nil?
           users = gitlab_get_team_members(gitlab_project.id)
+
+          info "Find user to assign."
+          users.each_with_index do |user, index|
+            puts "#{index + 1}、#{user.username}（#{user.name})".green
+          end
+
           begin
             info "\nSelect user name or index for review."
             input_user = STDIN.gets.chomp
-            if input_user =~ /[[:digit:]]/
-              user = users[input_user.to_i - 1]
+            if input_user.length == 0
+              user = nil
+            elsif input_user =~ /[[:digit:]]/
+              index = input_user.to_i;
+              if index > 0 && index < users.size
+                user = users[input_user.to_i - 1]
+              else
+                user = nil
+              end
             else
               user = gitlab_search_user(input_user)
             end
@@ -174,6 +194,40 @@ module Gb
           end until @title.length > 0
         end
 
+        if at_user.nil?
+          info "Find user for @."
+          puts "0、none".green
+          users.each_with_index do |user, index|
+            puts "#{index + 1}、#{user.username}（#{user.name})".green
+          end
+
+          begin
+            info "\nSelect user name or index for @."
+            input_user = STDIN.gets.chomp
+            if input_user =~ /[[:digit:]]/
+              index = input_user.to_i;
+              if index == 0
+                break
+              end
+              at_user = users[index - 1]
+            else
+              if input_user.length == 0
+                break
+              elsif index < users.size
+                user = users[input_user.to_i - 1]
+              else
+                user = nil
+              end
+              at_user = gitlab_search_user(input_user)
+            end
+            if at_user.nil?
+              error "Can not found user '#{input_user}'."
+            else
+              info "@#{at_user.username}(#{at_user.name})"
+            end
+          end until !at_user.nil?
+        end
+
         # 总共 0 （差异 0），复用 0 （差异 0）
         # remote:
         #     remote: To create a merge request for dev-v3.9.0-luobin, visit:
@@ -183,8 +237,8 @@ module Gb
         # * [new branch]        dev-v3.9.0-luobin -> dev-v3.9.0-luobin
 
         begin
-          merge_request = Gitlab.create_merge_request(gitlab_project.id, @title,
-                                      { source_branch: @working_branch, target_branch: @remote_branch, assignee_id:user ? user.id : "" })
+          options = { source_branch: @working_branch, target_branch: @remote_branch, assignee_id:user ? user.id : "", description:at_user ? "@#{at_user.username}":nil }
+          merge_request = Gitlab.create_merge_request(gitlab_project.id, @title, options)
           info "Create merge request for #{project.name} success. see detail url:#{merge_request.web_url}"
           if !Gem.win_platform?
             `open -a "/Applications/Google Chrome.app"    '#{merge_request.web_url}/diffs'`
@@ -247,10 +301,7 @@ module Gb
         user.username == 'root'
       }
       if users.size > 0
-        info "Find user to assign."
-        users.each_with_index do |user, index|
-          puts "#{index + 1}、#{user.username}（#{user.name})".green
-        end
+
       else
         raise Error.new("Can't find members in project '#{project_id}''.")
       end
