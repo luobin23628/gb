@@ -8,12 +8,12 @@ module Gb
     self.summary = '遍历所有工程执行命令'
     self.description = <<-DESC
       遍历所有工程执行命令.
-      gb forall -c="git reset --hard"
+      gb forall --c="git reset --hard"
     DESC
 
     def self.options
       [
-          ["-c", "执行命令"],
+          ["--c", "执行命令"],
       ].concat(super)
     end
 
@@ -29,13 +29,13 @@ module Gb
       end
     end
 
-    def run_in_workspace
+    def run
 
       self.gb_config.projects.each do |project|
         project_path = File.expand_path(project.name, './')
 
         if File.exist?(project_path)
-          info "For project '#{project.name}'..."
+          info "'#{@command}' For project '#{project.name}'..."
           g = Git.open(project_path)
           Dir.chdir(project_path) do
             result = `#{@command}`
