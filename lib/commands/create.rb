@@ -14,6 +14,7 @@ module Gb
     def self.options
       options = [
           ["--config_url=[url]", "指定配置文件url地址"],
+          ["--private_token=[token]", "GitLab private token"],
       ].concat(super)
       options.delete_if do |option|
         option[0] =~ /^--config=/
@@ -23,6 +24,7 @@ module Gb
 
     def initialize(argv)
       @config_url = argv.option('config_url')
+      @private_token = argv.option('private_token')
       super
     end
 
@@ -51,12 +53,15 @@ module Gb
         gb_config = GbConfig.load_yml(yml_response)
       end
 
-      begin
-        print "Input GitLab private token:  "
-        private_token = STDIN.gets.chomp
-      end until private_token.length > 0
+      if @private_token.nil?
+        begin
+          print "Input GitLab private token:  "
+          private_token = STDIN.gets.chomp
+        end until private_token.length > 0
+        @private_token = private_token
+      end
 
-      gb_config.gitlab.private_token = private_token
+      gb_config.gitlab.private_token = @private_token
 
       File.open("./Gb.yml", 'w') do |file|
         Psych.dump(gb_config.to_dictionary, file)
