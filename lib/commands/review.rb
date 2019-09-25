@@ -171,7 +171,7 @@ module Gb
               user = nil
             elsif input_user =~ /[[:digit:]]/
               index = input_user.to_i;
-              if index > 0 && index < users.size
+              if index > 0 && index <= users.size
                 user = users[input_user.to_i - 1]
               else
                 user = nil
@@ -213,7 +213,7 @@ module Gb
             else
               if input_user.length == 0
                 break
-              elsif index < users.size
+              elsif index <= users.size
                 user = users[input_user.to_i - 1]
               else
                 user = nil
