@@ -194,7 +194,7 @@ module Gb
           end until @title.length > 0
         end
 
-        if at_user.nil?
+        if at_user.nil? && !users.nil?
           info "Find user for @."
           puts "0、none".green
           users.each_with_index do |user, index|
