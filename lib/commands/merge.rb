@@ -44,7 +44,7 @@ module Gb
       end
     end
 
-    def run_in_workspace
+    def run_in_config
       remote = "origin"
 
       # api: https://www.rubydoc.info/gems/gitlab/toplevel

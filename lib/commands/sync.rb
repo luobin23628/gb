@@ -11,7 +11,7 @@ module Gb
       根据yml配置，更新代码.
     DESC
 
-    def run_in_workspace
+    def run_in_config
 
       remote = 'origin'
       workspace_config = self.workspace_config

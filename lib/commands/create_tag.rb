@@ -39,7 +39,7 @@ module Gb
       end
     end
 
-    def run
+    def run_in_config
       # api: https://www.rubydoc.info/gems/gitlab/toplevel
       # document: https://narkoz.github.io/gitlab/cli
 

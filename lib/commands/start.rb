@@ -37,7 +37,7 @@ module Gb
       end
     end
 
-    def run
+    def run_in_config
       remote = 'origin'
       workspace_config = WorkSpaceConfig.new(@remote_branch, @working_branch)
 

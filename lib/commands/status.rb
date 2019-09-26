@@ -11,7 +11,7 @@ module Gb
       查看工作分支代码状态.
     DESC
 
-    def run_in_workspace
+    def run_in_config
       workspace_config = self.workspace_config
       info "current work branch '#{workspace_config.work_branch}'"
       info "track remote branch '#{workspace_config.remote_branch}'."

@@ -12,14 +12,8 @@ module Gb
     self.ignore_in_command_lookup = true
     attr_reader :gb_config
 
-    def self.options
-      [
-          ['--config=[Gb.yml]', 'gb配置, 默认为Gb.yml'],
-      ].concat(super)
-    end
-
     def initialize(argv)
-      @yml = argv.option('config')
+      # @yml = argv.option('config')
       if @yml.nil?
         @yml = 'Gb.yml'
       end
@@ -31,31 +25,31 @@ module Gb
     end
 
     def run
-      workspace_path = "./"
-      find_workspace = false;
+      config_dir = "./"
+      find_config = false;
       begin
         result = nil
-        Dir.chdir(workspace_path) do
-          result = Dir.glob('.gb', File::FNM_DOTMATCH)
+        Dir.chdir(config_dir) do
+          result = Dir.glob('Gb.yml', File::FNM_DOTMATCH)
         end
         if result.length > 0
-          find_workspace = true
+          find_config = true
           break
         else
-          workspace_path = File.expand_path("../", workspace_path)
+          config_dir = File.expand_path("../", config_dir)
         end
-      end while workspace_path.length > 0 && workspace_path != "/"
+      end while config_dir.length > 0 && config_dir != "/"
 
-      if find_workspace
-        Dir.chdir(workspace_path) do
-          self.run_in_workspace()
+      if find_config
+        Dir.chdir(config_dir) do
+          self.run_in_config()
         end
       else
         raise Error.new("Current path is not gb workspace. please run 'gb start' first.")
       end
     end
 
-    def run_in_workspace
+    def run_in_config
 
     end
 

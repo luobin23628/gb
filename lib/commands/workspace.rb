@@ -11,7 +11,7 @@ module Gb
       查看当前工作区信息.
     DESC
 
-    def run_in_workspace
+    def run_in_config
 
       remote = 'origin'
       workspace_config = self.workspace_config

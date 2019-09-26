@@ -47,7 +47,7 @@ module Gb
       # end
     end
 
-    def run_in_workspace
+    def run_in_config
 
       @working_branch = self.workspace_config.work_branch
       @remote_branch = self.workspace_config.remote_branch
