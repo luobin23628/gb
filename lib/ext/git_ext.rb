@@ -24,6 +24,12 @@ module Patches
         # @logger = Logger.new(STDOUT)
       end
 
+      def ls_files(location=nil)
+        #git bug， git diff-files结果不对，先执行git status后正确
+        command_lines("status")
+        super
+      end
+
       def run_command(git_cmd, &block)
         git_cmd = git_cmd.gsub(/2>&1$/, '')
         return IO.popen(git_cmd, &block) if block_given?
